@@ -1,20 +1,11 @@
-{
-    "condition": [
-        {
-            "p_startday": "20240101",
-            "p_endday": "2024-11-02",
-            "p_itemcategorycode": "200",
-            "p_itemcode": "225",
-            "p_kindcode": "00",
-            "p_productrankcode": "01",
-            "p_countycode": "3511",
-            "p_convert_kg_yn": "Y",
-            "p_key": "KAMIS_KEY",
-            "p_id": "P_CERT_ID",
-            "p_returntype": "json"
-        }
-    ],
-    "data": [
-        "001"
-    ]
-}
+[
+    {
+        "itemname": "",
+        "kindname": "",
+        "countyname": "",
+        "marketname": "",
+        "yyyy": "",
+        "regday": "",
+        "price": ""
+    }
+]
