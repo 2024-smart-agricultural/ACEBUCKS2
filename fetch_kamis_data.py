@@ -30,23 +30,13 @@ response = requests.get(url, params=params)
 # 응답 데이터 확인 및 JSON 파일로 저장
 if response.status_code == 200:
     data = response.json()  # JSON 형태로 응답을 받음
-    print("데이터 가져오기 성공")
+    print("API 응답 데이터 전체:", data)  # 전체 데이터 구조를 출력해 확인
 
-    # JSON 데이터에서 원하는 필드 접근
-    for item in data.get('data', []):  # 응답 구조에 따라 수정
-        print("품목명:", item.get('itemname'))
-        print("품종명:", item.get('kindname'))
-        print("시군구:", item.get('countyname'))
-        print("마켓명:", item.get('marketname'))
-        print("연도:", item.get('yyyy'))
-        print("날짜:", item.get('regday'))
-        print("가격:", item.get('price'))
-        print("----------")
-
-    # JSON 파일로 저장
+    # JSON 파일로 저장 (필요시 전체 데이터 저장)
     with open('kamis_data.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     print("JSON 파일로 저장 성공: kamis_data.json")
 
 else:
     print(f"API 호출 실패: {response.status_code}")
+    print("응답 내용:", response.text)  # 에러 발생 시 응답 내용 출력
