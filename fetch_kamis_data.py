@@ -1,64 +1,105 @@
 import requests
 import os
 import json
+from dataclasses import dataclass, asdict
+from typing import Dict, Union, List
 
-# KAMIS API 키 가져오기
-api_key = os.getenv("KAMIS_KEY")  # GitHub Secrets에서 불러온 API 키
 
-# API 엔드포인트 URL
-url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodProductList'  # 실제 KAMIS API 엔드포인트로 바꾸기
+@dataclass
+class Certification:
+    """KAMIS API 인증 정보를 담는 데이터 클래스입니다."""
+    cert_key: str
+    cert_id: str
 
-# 요청 파라미터 설정
-params = {
-    'p_cert_key': 'KAMIS_KEY',                # 발급받은 API 키
-    'p_cert_id': 'P_CERT_ID',             # 발급받은 사용자 ID
-    'p_returntype': 'json',               # JSON 형식으로 응답 받기
-    'p_startday': '20240101',             # 시작 날짜
-    'p_endday': '20241231',               # 종료 날짜
-    'p_productclscode': '01',             # 소매 가격 조회
-    'p_itemcategorycode': '200',          # 예: 과일 부류 코드
-    'p_itemcode': '225',                  # 예: 사과 품목 코드
-    'p_kindcode': '00',                   # 특정 품종 코드 (없으면 00으로)
-    'p_productrankcode': '01',            # 1등급
-    'p_countrycode': '3511',              # 서울 지역
-    'p_convert_kg_yn': 'Y'                # kg 단위로 환산
-}
 
-# API 호출
-response = requests.get(url, params=params)
+@dataclass
+class PeriodProductListParams:
+    """KAMIS API의 기간별 상품 목록 요청 파라미터를 정의하는 데이터 클래스입니다."""
+    p_startday: str
+    p_endday: str
+    p_productclscode: str = '01'
+    p_itemcategorycode: str = '200'
+    p_itemcode: str = '225'
+    p_kindcode: str = '00'
+    p_productrankcode: str = '01'
+    p_countrycode: str = '3511'
+    p_convert_kg_yn: str = 'Y'
+    p_returntype: str = 'json'
 
-# 응답 데이터 확인 및 JSON 파일로 저장
-if response.status_code == 200:
-    data = response.json()  # JSON 형태로 응답을 받음
 
-    # 응답 데이터가 제대로 있는지 확인
-    if isinstance(data.get('data'), str):
-        filtered_data = []
-        for item in data['data']:
-            item_data = {
-                "condition": data.get('condition', ''),  # 요청 메시지
-                "data": data.get('data', ''),            # 응답 코드 또는 메시지
-                "itemname": item.get('itemname', ''),    # 품목명
-                "kindname": item.get('kindname', ''),    # 품종명
-                "countyname": item.get('countyname', ''),# 시군구
-                "marketname": item.get('marketname', ''),# 마켓명
-                "yyyy": item.get('yyyy', ''),            # 연도
-                "regday": item.get('regday', ''),        # 날짜
-                "price": item.get('price', '')           # 가격
+class KamisOpenApiClient:
+    """KAMIS 오픈 API 클라이언트 클래스입니다."""
+    
+    def __init__(self, cert: Certification, base_url: str = "http://www.kamis.or.kr/service/price/xml.do"):
+        self.cert = cert
+        self.base_url = base_url
+
+    def build_url(self, action: str, params: Dict[str, Union[str, List[str]]]) -> str:
+        """API 엔드포인트 URL을 생성합니다."""
+        params_with_cert = {
+            **asdict(params),
+            'action': action,
+            'p_cert_key': self.cert.cert_key,
+            'p_cert_id': self.cert.cert_id,
+            'p_returntype': 'json',
+        }
+        return f"{self.base_url}?{requests.compat.urlencode(params_with_cert)}"
+
+    def request(self, action: str, params: PeriodProductListParams) -> Dict[str, Union[str, List[Dict[str, str]]]]:
+        """KAMIS API에 요청을 보내고 JSON 응답을 반환합니다."""
+        url = self.build_url(action, params)
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+
+    def period_product_list(self, params: PeriodProductListParams) -> List[Dict[str, str]]:
+        """기간별 상품 목록을 요청하고 데이터를 파싱하여 반환합니다."""
+        response_data = self.request('periodProductList', params)
+        
+        # 오류 코드가 있으면 오류 메시지 반환
+        if isinstance(response_data.get('data'), str):
+            print("오류 발생:", response_data['data'])
+            return []
+
+        # 데이터 필드가 정상적으로 반환된 경우
+        parsed_data = []
+        for item in response_data['data']:
+            parsed_item = {
+                'countyname': item.get('countyname', ''),
+                'itemname': item.get('itemname', ''),
+                'kindname': item.get('kindname', ''),
+                'unit': item.get('unit', ''),
+                'price': item.get('price', ''),
+                'weekprice': item.get('weekprice', ''),
+                'monthprice': item.get('monthprice', ''),
+                'yearprice': item.get('yearprice', '')
             }
-            filtered_data.append(item_data)
+            parsed_data.append(parsed_item)
+        return parsed_data
+
+    def save_to_json(self, data: List[Dict[str, str]], filename: str = 'kamis_data.json') -> None:
+        """데이터를 JSON 파일로 저장합니다."""
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        print(f"{filename} 파일로 저장 성공")
 
 
-        # JSON 파일로 저장
-        with open('kamis_data.json', 'w', encoding='utf-8') as f:
-            json.dump(filtered_data, f, ensure_ascii=False, indent=4)
-        print("JSON 파일로 저장 성공: kamis_data.json")
+# 사용 예제
+if __name__ == "__main__":
+    # 환경 변수에서 인증 정보 불러오기
+    cert = Certification(
+        cert_key=os.getenv("KAMIS_KEY", "YOUR_KAMIS_KEY"),
+        cert_id=os.getenv("P_CERT_ID", "YOUR_CERT_ID")
+    )
+    client = KamisOpenApiClient(cert)
 
-    else:
-        # data가 리스트가 아닐 때, 오류 메시지 출력
-        print("오류가 발생했습니다.")
-        print("오류 코드 또는 메시지:", data.get('data'))
+    # 요청 파라미터 설정
+    params = PeriodProductListParams(
+        p_startday='20240101',
+        p_endday='20241231'
+    )
 
-else:
-    print(f"API 호출 실패: {response.status_code}")
-    print("응답 내용:", response.text)
+    # API 호출 및 데이터 저장
+    data = client.period_product_list(params)
+    if data:
+        client.save_to_json(data)
