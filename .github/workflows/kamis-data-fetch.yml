@@ -25,6 +25,6 @@ jobs:
 
       - name: Fetch KAMIS Data
         env:
-          KAMIS_API_KEY: ${{ secrets.KAMIS_API_KEY }}
+          KAMIS_API_KEY: ${{ secrets.KAMIS_KEY }}
         run: |
           python fetch_kamis_data.py
