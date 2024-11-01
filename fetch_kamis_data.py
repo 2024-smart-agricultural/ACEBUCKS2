@@ -49,11 +49,16 @@ if response.status_code == 200:
             filtered_data.append(item_data)
 
 
-    # JSON 파일로 저장 (필요시 전체 데이터 저장)
-    with open('kamis_data.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-    print("JSON 파일로 저장 성공: kamis_data.json")
+        # JSON 파일로 저장
+        with open('kamis_data.json', 'w', encoding='utf-8') as f:
+            json.dump(filtered_data, f, ensure_ascii=False, indent=4)
+        print("JSON 파일로 저장 성공: kamis_data.json")
+
+    else:
+        # data가 리스트가 아닐 때, 오류 메시지 출력
+        print("오류가 발생했습니다.")
+        print("오류 코드 또는 메시지:", data.get('data'))
 
 else:
     print(f"API 호출 실패: {response.status_code}")
-    print("응답 내용:", response.text)  # 에러 발생 시 응답 내용 출력
+    print("응답 내용:", response.text)
