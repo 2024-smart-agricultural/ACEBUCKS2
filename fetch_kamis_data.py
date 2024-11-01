@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 
 # KAMIS API 키 가져오기
 api_key = os.getenv("KAMIS_KEY")  # GitHub Secrets에서 불러온 API 키
@@ -26,9 +27,15 @@ params = {
 # API 호출
 response = requests.get(url, params=params)
 
-# 응답 데이터 확인
+# 응답 데이터 확인 및 JSON 파일로 저장
 if response.status_code == 200:
     data = response.json()  # JSON 형태로 응답을 받을 경우
-    print("데이터 가져오기 성공:", data)
+    print("데이터 가져오기 성공")
+
+    # JSON 파일로 저장
+    with open('kamis_data.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+    print("JSON 파일로 저장 성공: kamis_data.json")
+
 else:
     print(f"API 호출 실패: {response.status_code}")
