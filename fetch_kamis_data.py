@@ -21,7 +21,7 @@ params = {
     'p_itemcode': '225',                  # 예: 특정 품목 코드
     'p_kindcode': '00',                   # 특정 품종 코드 (없으면 00으로)
     'p_productrankcode': '01',            # 4등급
-    'p_countrycode': '3511',              # 서울 지역
+    'p_countrycode': '1011',              # 서울 지역
     'p_convert_kg_yn': 'Y'                # kg 단위로 환산
 }
 
