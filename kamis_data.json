@@ -9,12 +9,12 @@
             "p_productrankcode": "01",
             "p_countycode": "3511",
             "p_convert_kg_yn": "Y",
-            "p_key": "KAMIS_KEY",
+            "p_key": [],
             "p_id": "P_CERT_ID",
             "p_returntype": "json"
         }
     ],
     "data": [
-        "001"
+        "900"
     ]
 }
