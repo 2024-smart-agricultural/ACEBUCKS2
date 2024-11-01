@@ -10,7 +10,7 @@ url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodProductList'  # 
 
 # 요청 파라미터 설정
 params = {
-    'p_cert_key': api_key,                # 발급받은 API 키
+    'p_cert_key': 'KAMIS_KEY',                # 발급받은 API 키
     'p_cert_id': 'P_CERT_ID',             # 발급받은 사용자 ID
     'p_returntype': 'json',               # JSON 형식으로 응답 받기
     'p_startday': '20240101',             # 시작 날짜
