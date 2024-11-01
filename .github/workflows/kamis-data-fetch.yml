@@ -28,3 +28,14 @@ jobs:
           KAMIS_API_KEY: ${{ secrets.KAMIS_KEY }}
         run: |
           python fetch_kamis_data.py
+
+      - name: Commit and push JSON file
+        run: |
+          git config --global user.email "your-email@example.com"
+          git config --global user.name "your-username"
+          git add kamis_data.json
+          git commit -m "Add fetched KAMIS data"
+          git push
+        env:
+          # GitHub Actions에서 푸시를 위해 토큰을 사용
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
