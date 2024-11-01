@@ -25,7 +25,8 @@ jobs:
 
       - name: Fetch KAMIS Data
         env:
-          KAMIS_API_KEY: ${{ secrets.KAMIS_KEY }}
+          KAMIS_KEY: ${{ secrets.KAMIS_KEY }}
+          P_CERT_ID: ${{ secrets.P_CERT_ID }}
         run: |
           python fetch_kamis_data.py
 
@@ -37,5 +38,4 @@ jobs:
           git commit -m "Add fetched KAMIS data"
           git push
         env:
-          # GitHub Actions에서 푸시를 위해 토큰을 사용
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
