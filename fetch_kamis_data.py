@@ -2,10 +2,10 @@ import requests
 import os
 
 # KAMIS API 키 가져오기
-api_key = os.getenv("KAMIS_API_KEY")  # GitHub Secrets에서 불러온 API 키
+api_key = os.getenv("KAMIS_KEY")  # GitHub Secrets에서 불러온 API 키
 
 # API 엔드포인트 URL
-url = 'KAMIS_API_ENDPOINT'  # 실제 KAMIS API 엔드포인트로 바꾸기
+url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodProductList'  # 실제 KAMIS API 엔드포인트로 바꾸기
 
 # 요청 파라미터 설정
 params = {
