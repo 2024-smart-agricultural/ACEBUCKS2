@@ -30,23 +30,24 @@ response = requests.get(url, params=params)
 # 응답 데이터 확인 및 JSON 파일로 저장
 if response.status_code == 200:
     data = response.json()  # JSON 형태로 응답을 받음
-    print("API 응답 데이터 전체:", data)  # 전체 데이터 구조를 출력해 확인
 
-        # 특정 필드만 추출하여 저장
-    filtered_data = []
-    for item in data.get('data', []):
-        item_data = {
-            "condition": data.get('condition', ''),  # 요청 메시지
-            "data": item.get('data', ''),            # 응답 메시지
-            "itemname": item.get('itemname', ''),    # 품목명
-            "kindname": item.get('kindname', ''),    # 품종명
-            "countyname": item.get('countyname', ''),# 시군구
-            "marketname": item.get('marketname', ''),# 마켓명
-            "yyyy": item.get('yyyy', ''),            # 연도
-            "regday": item.get('regday', ''),        # 날짜
-            "price": item.get('price', '')           # 가격
-        }
-        filtered_data.append(item_data)
+    # 응답 데이터가 제대로 있는지 확인
+    if isinstance(data.get('data'), list):
+        filtered_data = []
+        for item in data['data']:
+            item_data = {
+                "condition": data.get('condition', ''),  # 요청 메시지
+                "data": data.get('data', ''),            # 응답 코드 또는 메시지
+                "itemname": item.get('itemname', ''),    # 품목명
+                "kindname": item.get('kindname', ''),    # 품종명
+                "countyname": item.get('countyname', ''),# 시군구
+                "marketname": item.get('marketname', ''),# 마켓명
+                "yyyy": item.get('yyyy', ''),            # 연도
+                "regday": item.get('regday', ''),        # 날짜
+                "price": item.get('price', '')           # 가격
+            }
+            filtered_data.append(item_data)
+
 
     # JSON 파일로 저장 (필요시 전체 데이터 저장)
     with open('kamis_data.json', 'w', encoding='utf-8') as f:
