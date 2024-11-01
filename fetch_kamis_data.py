@@ -32,7 +32,7 @@ if response.status_code == 200:
     data = response.json()  # JSON 형태로 응답을 받음
 
     # 응답 데이터가 제대로 있는지 확인
-    if isinstance(data.get('data'), list):
+    if isinstance(data.get('data'), str):
         filtered_data = []
         for item in data['data']:
             item_data = {
