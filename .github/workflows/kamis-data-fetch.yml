@@ -31,8 +31,8 @@ jobs:
 
       - name: Commit and push JSON file
         run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "your-username"
+          git config --global user.email "heejun1481@jbnu.ac.kr"
+          git config --global user.name "aceyang00"
           git add kamis_data.json
           git commit -m "Add fetched KAMIS data"
           git push
