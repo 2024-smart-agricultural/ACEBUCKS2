@@ -20,7 +20,7 @@ params = {
     'p_itemcategorycode': '200',          # 특정 부류 코드
     'p_itemcode': '225',                  # 특정 품목 코드
     'p_kindcode': '00',                   # 특정 품종 코드
-    'p_productrankcode': '01',            # 등급 코드
+    'p_productrankcode': '04',            # 등급 코드
     'p_countycode': '1101',               # 서울 지역
     'p_convert_kg_yn': 'Y'                # kg 단위로 환산
 }
