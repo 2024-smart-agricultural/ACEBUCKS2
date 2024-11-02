@@ -30,11 +30,11 @@ jobs:
         run: |
           python fetch_kamis_data.py
 
-      - name: Commit and push XML file
+      - name: Commit and push XML files
         run: |
           git config --global user.email "heejun1481@jbnu.ac.kr"
           git config --global user.name "aceyang00"
-          git add kamis_data.xml
+          git add kamis_data_*.xml
           git commit -m "Add fetched KAMIS data in XML format"
           git push
         env:
