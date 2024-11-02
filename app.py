@@ -6,8 +6,8 @@ import pandas as pd
 df = pd.read_csv("kamis_data.csv")
 
 # 제목과 설명
-st.title("KAMIS 농산물 가격 데이터 시각화")
-st.write("이 웹 애플리케이션은 KAMIS에서 수집한 농산물 가격 데이터를 시각화합니다.")
+st.title("KAMIS 농산물 가격 데이터 입력")
+st.write("이 웹 애플리케이션은 선택한 지역의 농산물 품목을 나열하고, 각 품목에 대해 수량을 입력할 수 있도록 합니다.")
 
 # 지역 선택
 st.subheader("1. 지역 선택")
@@ -25,7 +25,7 @@ for item_name in filtered_data["itemname"].unique():
     quantity = st.number_input(
         f"{item_name}의 수량 입력 (기본값: 100)",
         min_value=0,
-        value=100
+        value=100  # 기본값을 100으로 설정
     )
     quantities[item_name] = quantity  # 수량 저장
 
