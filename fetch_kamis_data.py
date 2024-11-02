@@ -54,7 +54,7 @@ params_list = [
         'p_productrankcode': '04',
         'p_countycode': '3511',
         'p_convert_kg_yn': 'Y'
-    }
+    },
     {
         'p_cert_key': api_key,
         'p_cert_id': cert_id,
@@ -68,7 +68,7 @@ params_list = [
         'p_productrankcode': '04',
         'p_countycode': '3511',
         'p_convert_kg_yn': 'Y'
-    }
+    },
     {
         'p_cert_key': api_key,
         'p_cert_id': cert_id,
@@ -82,7 +82,7 @@ params_list = [
         'p_productrankcode': '04',
         'p_countycode': '3511',
         'p_convert_kg_yn': 'Y'
-    }
+    },
 ]
 
 # 각 요청 파라미터 세트에 대해 API 호출 및 XML 파일 저장
