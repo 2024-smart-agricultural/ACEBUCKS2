@@ -15,6 +15,13 @@ for file in xml_files:
         
         # 날짜 결합 (yyyy + regday 형식으로)
         date = f"{yyyy}-{regday}" if yyyy and regday else None
+        
+        # price를 숫자로 변환 (문자열인 경우도 처리)
+        price_text = item.find("price").text if item.find("price") is not None else ''
+        try:
+            price = float(price_text)  # 소수 포함 숫자 형식으로 변환
+        except ValueError:
+            price = None  # 변환할 수 없는 경우 None으로 설정
 
         data = {
             "itemname": item.find("itemname").text if item.find("itemname") is not None else '',
@@ -22,7 +29,7 @@ for file in xml_files:
             "countyname": item.find("countyname").text if item.find("countyname") is not None else '',
             "marketname": item.find("marketname").text if item.find("marketname") is not None else '',
             "date": date,  # 결합된 날짜
-            "price": item.find("price").text if item.find("price") is not None else ''
+            "price": price  # 숫자형으로 변환된 가격
         }
         all_data.append(data)
 
