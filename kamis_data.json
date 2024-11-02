@@ -7,5 +7,14 @@
         "yyyy": "",
         "regday": "",
         "price": ""
+    },
+    {
+        "itemname": "",
+        "kindname": "",
+        "countyname": "",
+        "marketname": "",
+        "yyyy": "",
+        "regday": "",
+        "price": ""
     }
 ]
