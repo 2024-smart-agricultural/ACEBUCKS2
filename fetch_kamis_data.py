@@ -1,41 +1,138 @@
-name: Fetch KAMIS API Data
+import requests
+import os
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement
+from xml.dom import minidom
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+# KAMIS API 키 가져오기
+api_key = os.getenv("KAMIS_KEY")  # GitHub Secrets에서 불러온 API 키
+cert_id = os.getenv("P_CERT_ID")  # GitHub Secrets에서 불러온 인증 ID
 
-jobs:
-  fetch-kamis-data:
-    runs-on: ubuntu-latest
+# API 엔드포인트 URL
+url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodRetailProductList'
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+# 요청 파라미터 세트 리스트
+params_list = [
+    {
+        'p_cert_key': api_key,
+        'p_cert_id': cert_id,
+        'p_returntype': 'xml',
+        'p_startday': '20240101',
+        'p_endday': '20241231',
+        'p_productclscode': '01',
+        'p_itemcategorycode': '200',
+        'p_itemcode': '225',
+        'p_kindcode': '00',
+        'p_productrankcode': '04',
+        'p_countycode': '3511',
+        'p_convert_kg_yn': 'Y'
+    },
+    {
+        'p_cert_key': api_key,
+        'p_cert_id': cert_id,
+        'p_returntype': 'xml',
+        'p_startday': '20240101',
+        'p_endday': '20241231',
+        'p_productclscode': '01',
+        'p_itemcategorycode': '200',
+        'p_itemcode': '257',
+        'p_kindcode': '00',
+        'p_productrankcode': '04',
+        'p_countycode': '3511',
+        'p_convert_kg_yn': 'Y'
+    },
+    {
+        'p_cert_key': api_key,
+        'p_cert_id': cert_id,
+        'p_returntype': 'xml',
+        'p_startday': '20240101',
+        'p_endday': '20241231',
+        'p_productclscode': '01',
+        'p_itemcategorycode': '400',
+        'p_itemcode': '418',
+        'p_kindcode': '02',
+        'p_productrankcode': '04',
+        'p_countycode': '3511',
+        'p_convert_kg_yn': 'Y'
+    },
+    {
+        'p_cert_key': api_key,
+        'p_cert_id': cert_id,
+        'p_returntype': 'xml',
+        'p_startday': '20240101',
+        'p_endday': '20241231',
+        'p_productclscode': '01',
+        'p_itemcategorycode': '400',
+        'p_itemcode': '420',
+        'p_kindcode': '02',
+        'p_productrankcode': '04',
+        'p_countycode': '3511',
+        'p_convert_kg_yn': 'Y'
+    },
+    {
+        'p_cert_key': api_key,
+        'p_cert_id': cert_id,
+        'p_returntype': 'xml',
+        'p_startday': '20240101',
+        'p_endday': '20241231',
+        'p_productclscode': '01',
+        'p_itemcategorycode': '400',
+        'p_itemcode': '424',
+        'p_kindcode': '00',
+        'p_productrankcode': '04',
+        'p_countycode': '3511',
+        'p_convert_kg_yn': 'Y'
+    },
+]
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+# 각 요청 파라미터 세트에 대해 API 호출 및 XML 파일 저장
+for i, params in enumerate(params_list, start=1):
+    # API 호출
+    response = requests.get(url, params=params)
+    
+    # 응답 데이터 확인 및 XML 파일로 저장
+    if response.status_code == 200:
+        # XML 데이터 파싱
+        root = ET.fromstring(response.content)
+        
+        # 새 XML 문서 생성
+        document = Element('document')
+        condition = SubElement(document, 'condition')
+        condition_item = SubElement(condition, 'item')
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+        # 요청 파라미터를 condition 부분에 추가
+        for key, value in params.items():
+            param = SubElement(condition_item, key)
+            param.text = value
 
-      - name: Fetch KAMIS Data
-        env:
-          KAMIS_KEY: ${{ secrets.KAMIS_KEY }}
-          P_CERT_ID: ${{ secrets.P_CERT_ID }}
-        run: |
-          python fetch_kamis_data.py
+        # data 부분을 추가
+        data = SubElement(document, 'data')
+        error_code = SubElement(data, 'error_code')
+        error_code.text = root.find('.//error_code').text if root.find('.//error_code') is not None else ''
 
-      - name: Commit and push XML files
-        run: |
-          git config --global user.email "heejun1481@jbnu.ac.kr"
-          git config --global user.name "aceyang00"
-          git add kamis_data_*.xml
-          git commit -m "Add fetched KAMIS data in XML format"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # XML 응답에서 item 요소를 찾고 각 항목을 data에 추가
+        for item in root.findall(".//item"):
+            data_item = SubElement(data, 'item')
+            item_fields = {
+                "itemname": item.find('itemname').text if item.find('itemname') is not None else '',
+                "kindname": item.find('kindname').text if item.find('kindname') is not None else '',
+                "countyname": item.find('countyname').text if item.find('countyname') is not None else '',
+                "marketname": item.find('marketname').text if item.find('marketname') is not None else '',
+                "yyyy": item.find('yyyy').text if item.find('yyyy') is not None else '',
+                "regday": item.find('regday').text if item.find('regday') is not None else '',
+                "price": item.find('price').text if item.find('price') is not None else ''
+            }
+            for field_name, field_value in item_fields.items():
+                field_element = SubElement(data_item, field_name)
+                field_element.text = field_value
+
+        # XML을 문자열로 변환 후, 고유한 파일 이름으로 저장
+        xml_str = minidom.parseString(ET.tostring(document)).toprettyxml(indent="  ")
+        filename = f"kamis_data_{i}.xml"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(xml_str)
+        print(f"XML 파일로 저장 성공: {filename}")
+
+    else:
+        print(f"API 호출 실패: {response.status_code}")
+        print("응답 내용:", response.text)
