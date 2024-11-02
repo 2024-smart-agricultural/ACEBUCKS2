@@ -1,12 +1,12 @@
-name: Fetch KAMIS API Data
+name: Fetch KAMIS API Data and Update CSV
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # 매일 자정에 실행
   workflow_dispatch:
 
 jobs:
-  fetch-kamis-data:
+  fetch-and-update:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "heejun1481@jbnu.ac.kr"
           git config --global user.name "aceyang00"
           git add kamis_data.csv
-          git commit -m "Add converted KAMIS data in CSV format"
+          git commit -m "Update KAMIS data in CSV format"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
