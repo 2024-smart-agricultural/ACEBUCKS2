@@ -16,15 +16,15 @@ for file in xml_files:
         # 날짜 결합 (yyyy + regday 형식으로)
         date = f"{yyyy}-{regday}" if yyyy and regday else None
         
-        # price 태그가 존재하는지 확인 후 변환
-        price_element = item.find("price")
-        if price_element is not None and price_element.text and price_element.text.strip():
-            try:
-                price = float(price_element.text)
-            except ValueError:
-                price = None
+        # price 값이 비어있거나 '-'이면 0으로 처리
+        price_text = item.find("price").text if item.find("price") is not None else ''
+        if price_text in ('', '-'):
+            price = 0.0
         else:
-            price = None
+            try:
+                price = float(price_text)
+            except ValueError:
+                price = 0.0
 
         data = {
             "itemname": item.find("itemname").text if item.find("itemname") is not None else '',
