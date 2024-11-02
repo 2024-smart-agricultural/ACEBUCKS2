@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 api_key = os.getenv("KAMIS_KEY")  # GitHub Secrets에서 불러온 API 키
 
 # API 엔드포인트 URL
-url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodProductList'  # 실제 KAMIS API 엔드포인트로 바꾸기
+url = 'http://www.kamis.or.kr/service/price/xml.do?action=periodRetailProductList'  # 실제 KAMIS API 엔드포인트로 바꾸기
 
 # 요청 파라미터 설정
 params = {
@@ -21,7 +21,7 @@ params = {
     'p_itemcode': '225',                  # 예: 특정 품목 코드
     'p_kindcode': '00',                   # 특정 품종 코드 (없으면 00으로)
     'p_productrankcode': '01',            # 4등급
-    'p_countrycode': '1011',              # 서울 지역
+    'p_countrycode': '3511',              # 서울 지역
     'p_convert_kg_yn': 'Y'                # kg 단위로 환산
 }
 
