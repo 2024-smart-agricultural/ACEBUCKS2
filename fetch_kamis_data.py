@@ -26,7 +26,7 @@ params = {
 }
 
 # API 호출
-response = requests.get(http://www.kamis.or.kr/service/price/xml.do?action=periodRetailProductList)
+response = requests.get(url, params=params)
 
 # 응답 데이터 확인 및 JSON 파일로 저장
 if response.status_code == 200:
