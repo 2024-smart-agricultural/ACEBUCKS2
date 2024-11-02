@@ -11,13 +11,13 @@ for file in xml_files:
     root = tree.getroot()
     for item in root.findall(".//item"):
         data = {
-            "itemname": item.find("itemname").text,
-            "kindname": item.find("kindname").text,
-            "countyname": item.find("countyname").text,
-            "marketname": item.find("marketname").text,
-            "yyyy": item.find("yyyy").text,
-            "regday": item.find("regday").text,
-            "price": item.find("price").text
+            "itemname": item.find("itemname").text if item.find("itemname") is not None else '',
+            "kindname": item.find("kindname").text if item.find("kindname") is not None else '',
+            "countyname": item.find("countyname").text if item.find("countyname") is not None else '',
+            "marketname": item.find("marketname").text if item.find("marketname") is not None else '',
+            "yyyy": item.find("yyyy").text if item.find("yyyy") is not None else '',
+            "regday": item.find("regday").text if item.find("regday") is not None else '',
+            "price": item.find("price").text if item.find("price") is not None else ''
         }
         all_data.append(data)
 
