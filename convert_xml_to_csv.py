@@ -16,11 +16,11 @@ for file in xml_files:
         # 날짜 결합 (yyyy + regday 형식으로)
         date = f"{yyyy}-{regday}" if yyyy and regday else None
         
-        # price를 숫자로 변환 (문자열인 경우도 처리)
-        price_text = item.find("price").text
-        if price_text and price_text.strip():  # None 또는 빈 문자열 확인
+        # price 태그가 존재하는지 확인 후 변환
+        price_element = item.find("price")
+        if price_element is not None and price_element.text and price_element.text.strip():
             try:
-                price = float(price_text)
+                price = float(price_element.text)
             except ValueError:
                 price = None
         else:
