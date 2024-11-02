@@ -2,7 +2,7 @@ name: Fetch KAMIS API Data and Update CSV
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 매일 자정에 실행
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pandas matplotlib streamlit
+          pip install -r requirements.txt  # requirements.txt에 기록된 패키지 설치
 
       - name: Fetch KAMIS Data
         env:
