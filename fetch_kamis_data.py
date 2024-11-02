@@ -20,9 +20,9 @@ params = {
     'p_endday': '20241231',
     'p_productclscode': '01',
     'p_itemcategorycode': '200',
-    'p_itemcode': '212',
+    'p_itemcode': '225',
     'p_kindcode': '00',
-    'p_productrankcode': '04',
+    'p_productrankcode': '01',
     'p_countycode': '1101',
     'p_convert_kg_yn': 'Y'
 }
