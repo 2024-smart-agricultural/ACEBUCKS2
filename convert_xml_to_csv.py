@@ -22,7 +22,7 @@ for file in xml_files:
             "countyname": item.find("countyname").text if item.find("countyname") is not None else '',
             "marketname": item.find("marketname").text if item.find("marketname") is not None else '',
             "date": date,  # 결합된 날짜
-            "price": item.find("price").text if item.find("price") is not None else ''
+            "price": item.find("price").text if item.find("price") is not None else '0'
         }
         all_data.append(data)
 
