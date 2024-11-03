@@ -2,7 +2,7 @@ name: Fetch KAMIS API Data and Update CSV
 
 on:
   schedule:
-    - cron: '* 6/18 * * *'
+    - cron: '0 21,9 * * *'
   workflow_dispatch:
 
 jobs:
