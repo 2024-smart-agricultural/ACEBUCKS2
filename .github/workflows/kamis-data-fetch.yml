@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.x'
 
@@ -39,7 +39,12 @@ jobs:
           git config --global user.email "heejun1481@jbnu.ac.kr"
           git config --global user.name "aceyang00"
           git add kamis_data.csv
-          git commit -m "Update KAMIS data in CSV format"
-          git push
+          # 변경 사항이 있을 때만 커밋 및 푸시 수행
+          if ! git diff --cached --quiet; then
+            git commit -m "Update KAMIS data in CSV format"
+            git push
+          else
+            echo "No changes to commit"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
